@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Configuration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { background: white; border-radius: 15px; max-width: 500px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 15px 15px 0 0; }
+        .form { padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #667eea; }
+        small { color: #666; font-size: 0.9em; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; }
+        button:hover { transform: translateY(-2px); }
+        .info { background: #f0f7ff; border-left: 4px solid #667eea; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎥 Camera Configuration</h1>
+            <p>Enter your camera credentials</p>
+        </div>
+        <div class="form">
+            <div class="info">
+                <strong>Before you start:</strong>
+                <ul>
+                    <li>Camera must be powered on</li>
+                    <li>RTSP must be enabled</li>
+                    <li>Use sub-stream for better performance</li>
+                </ul>
+            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Camera IP Address *</label>
+                    <input type="text" name="camera_ip" value="{{ config.ip or '' }}" placeholder="192.168.0.100" required>
+                    <small>Local or public IP</small>
+                </div>
+                <div class="form-group">
+                    <label>Username *</label>
+                    <input type="text" name="camera_user" value="{{ config.username or 'admin' }}" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" name="camera_pass" value="{{ config.password or '' }}" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <label>RTSP Port</label>
+                    <input type="number" name="camera_port" value="{{ config.port or 554 }}" placeholder="554">
+                </div>
+                <div class="form-group">
+                    <label>Stream Quality</label>
+                    <select name="stream_type">
+                        <option value="sub" {% if config.stream_type == 'sub' %}selected{% endif %}>Sub-stream (Recommended)</option>
+                        <option value="main" {% if config.stream_type == 'main' %}selected{% endif %}>Main-stream (High quality)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>FPS Limit</label>
+                    <input type="number" name="fps_limit" value="{{ config.fps_limit or 15 }}" min="5" max="30">
+                </div>
+                <button type="submit">💾 Save & Start Streaming</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

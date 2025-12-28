@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-Camera Stream</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; background: #1a1a2e; color: white; padding: 20px; }
+        .header { text-align: center; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .controls { text-align: center; margin-bottom: 30px; }
+        .btn { padding: 12px 30px; background: #667eea; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; margin: 5px; }
+        .btn:hover { background: #764ba2; transform: translateY(-2px); }
+        .btn-add { background: #28a745; }
+        .btn-add:hover { background: #218838; }
+        .btn-delete { background: #dc3545; padding: 8px 15px; font-size: 14px; }
+        .camera-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .camera-card { background: #16213e; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .camera-header { background: #0f3460; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .camera-name { font-size: 1.2em; font-weight: 600; }
+        .camera-status { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #28a745; margin-right: 10px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .camera-video { width: 100%; height: auto; background: #000; display: block; }
+        .camera-info { padding: 15px; background: #0f3460; display: flex; justify-content: space-between; font-size: 0.9em; }
+        .no-cameras { text-align: center; padding: 60px; background: #16213e; border-radius: 15px; }
+        .no-cameras h2 { margin-bottom: 20px; color: #667eea; }
+        @media (max-width: 768px) { .camera-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎥 Multi-Camera Stream</h1>
+        <p>Live monitoring from {{ cameras|length }} camera(s)</p>
+    </div>
+    
+    <div class="controls">
+        <a href="/add_camera" class="btn btn-add">➕ Add Camera</a>
+        <a href="/health" class="btn" target="_blank">📊 Health Check</a>
+        <button class="btn" onclick="location.reload()">🔄 Refresh All</button>
+    </div>
+    
+    {% if cameras %}
+    <div class="camera-grid">
+        {% for camera in cameras %}
+        <div class="camera-card">
+            <div class="camera-header">
+                <div>
+                    <span class="camera-status"></span>
+                    <span class="camera-name">{{ camera.name }}</span>
+                </div>
+                <form method="POST" action="/delete_camera/{{ camera.id }}" style="display:inline;" 
+                      onsubmit="return confirm('Delete {{ camera.name }}?');">
+                    <button type="submit" class="btn btn-delete">🗑️ Delete</button>
+                </form>
+            </div>
+            <img src="/video_feed/{{ camera.id }}" class="camera-video" alt="{{ camera.name }}">
+            <div class="camera-info">
+                <span>📍 {{ camera.ip_address }}</span>
+                <span>🎬 {{ camera.username }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-cameras">
+        <h2>No Cameras Configured</h2>
+        <p>Click "Add Camera" to get started</p>
+        <br>
+        <a href="/add_camera" class="btn btn-add">➕ Add Your First Camera</a>
+    </div>
+    {% endif %}
+</body>
+</html>

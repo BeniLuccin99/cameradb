@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: camera-streaming-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements_api.txt
+    startCommand: gunicorn api:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: postgresql://postgres.ibqtnoinawypjsxlvfes:1M7KCBNBiBcsqPe4@aws-1-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+      - key: DIRECT_URL
+        value: postgresql://postgres.ibqtnoinawypjsxlvfes:1M7KCBNBiBcsqPe4@aws-1-eu-west-1.pooler.supabase.com:5432/postgres
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /api/health
