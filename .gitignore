@@ -1,24 +1,21 @@
-# Output directories
-snapshots/
-recordings/
+# Environment variables
+.env
 
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
 *.so
 .Python
-env/
 venv/
-ENV/
-.venv
+env/
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
 
 # OS
 .DS_Store
-Thumbs.db
+
+# Snapshots and recordings
+snapshots/
+recordings/
